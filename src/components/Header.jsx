@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import Logo from '../assets/images/Logo_spotify.png';
 
 const Header = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -24,7 +25,7 @@ const Header = () => {
   return (
     <header
       ref={headerRef}
-      className="sticky top-0 left-0 w-full bg-white shadow-md z-50"
+      className="sticky top-0 left-0 w-full bg-white/30 backdrop-blur-none shadow-md z-50"
     >
       <div className="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
         <nav className="flex items-center justify-between h-16 lg:h-20">
@@ -32,8 +33,8 @@ const Header = () => {
           <div className="flex-shrink-0">
             <a href="#" title="Home" className="flex">
               <img
-                className="w-auto h-8 lg:h-10"
-                src="https://cdn.rareblocks.xyz/collection/celebration/images/logo.svg"
+                className="w-auto h-16 lg:h-20"
+                src={Logo}
                 alt="Logo"
               />
             </a>
