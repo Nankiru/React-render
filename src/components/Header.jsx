@@ -1,10 +1,13 @@
 import React, { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import Logo from '../assets/images/Logo_spotify.png';
+import { useNavigate } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom"; // Import useLocation
+import Logo from "../assets/images/Logo_spotify.png";
 
 const Header = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const headerRef = useRef(null);
+  const location = useLocation(); // Get current location
 
   // Close menu when clicking outside
   useEffect(() => {
@@ -22,21 +25,29 @@ const Header = () => {
     };
   }, [isMobileMenuOpen]);
 
+  const getLinkClass = (path) => {
+    return location.pathname === path
+      ? " text-green-500"
+      : "";
+  };
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    localStorage.removeItem("username");
+    navigate("/login");
+  };
+
   return (
     <header
       ref={headerRef}
-      className="sticky top-0 left-0 w-full bg-white/30 backdrop-blur-none shadow-md z-50"
+      className="sticky top-0 left-0 w-full bg-white/30 backdrop-blur-md shadow-md z-50"
     >
       <div className="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
         <nav className="flex items-center justify-between h-16 lg:h-20">
           {/* Logo */}
           <div className="flex-shrink-0">
             <a href="#" title="Home" className="flex">
-              <img
-                className="w-auto h-16 lg:h-20"
-                src={Logo}
-                alt="Logo"
-              />
+              <img className="w-auto h-16 lg:h-20" src={Logo} alt="Logo" />
             </a>
           </div>
 
@@ -95,25 +106,29 @@ const Header = () => {
 
           {/* Desktop Navigation */}
           <div className="hidden lg:flex lg:items-center lg:ml-auto lg:space-x-10">
-            {["Features", "Solutions", "Resources", "Pricing"].map((item) => (
-              <a
-                key={item}
-                href="#"
-                className="text-base font-medium text-black transition-all duration-300 hover:text-blue-600 focus:text-blue-600"
-              >
-                {item}
-              </a>
-            ))}
+            {["/", "/feature", "/about", "/contact"].map((path, index) => {
+              const linkText = ["Home", "Feature", "About Us", "Contact"][index];
+              return (
+                <Link
+                  key={path}
+                  to={path}
+                  className={getLinkClass(path)}
+                >
+                  {linkText}
+                </Link>
+              );
+            })}
           </div>
 
           {/* Desktop CTA */}
-          <a
-            href="#"
-            className="items-center justify-center hidden px-4 py-3 ml-10 text-base font-semibold text-white transition-all duration-300 bg-blue-600 border border-transparent rounded-md lg:inline-flex hover:bg-blue-700 focus:bg-blue-700"
+          <button
+            onClick={handleLogout}
+            className="group items-center justify-center hidden px-4 py-3 ml-10 text-base font-semibold text-green-600 transition-all duration-300 bg-white border border-transparent rounded-md lg:inline-flex hover:text-green-400"
             role="button"
           >
-            Get started now
-          </a>
+            
+            Log Out
+          </button>
         </nav>
       </div>
 
@@ -125,20 +140,23 @@ const Header = () => {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
             transition={{ duration: 0.4, ease: "easeInOut" }}
-            className="absolute top-16 left-0 right-0 px-6 py-4 bg-white border border-gray-200 rounded-md shadow-md lg:hidden"
+            className="absolute top-16 left-0 right-0 px-6 py-4 bg-white/30 backdrop-blur-md shadow-md lg:hidden"
           >
             <div className="flex flex-col space-y-4">
-              {["Features", "Solutions", "Resources", "Pricing"].map((item) => (
-                <motion.a
-                  key={item}
-                  href="#"
-                  className="text-lg font-medium text-black transition-all duration-300 hover:text-blue-600 focus:text-blue-600"
-                  onClick={() => setIsMobileMenuOpen(false)}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  {item}
-                </motion.a>
-              ))}
+              {["/", "/feature", "/about", "/contact"].map((path, index) => {
+                const linkText = ["Home", "Feature", "About Us", "Contact"][index];
+                return (
+                  <motion.a
+                    key={path}
+                    href={path}
+                    className={getLinkClass(path)}
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    whileTap={{ scale: 0.95 }}
+                  >
+                    {linkText}
+                  </motion.a>
+                );
+              })}
             </div>
 
             <div className="mt-6">
@@ -149,7 +167,7 @@ const Header = () => {
                 onClick={() => setIsMobileMenuOpen(false)}
                 whileTap={{ scale: 0.95 }}
               >
-                Get started now
+                Login
               </motion.a>
             </div>
           </motion.nav>
